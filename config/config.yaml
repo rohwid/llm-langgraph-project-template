@@ -1,0 +1,22 @@
+artifacts_root: artifacts
+
+data_ingestion:
+  root_dir: artifacts/data-ingestion
+  input_train_path: "artifacts/preprocessing/X_train.csv"
+  input_test_path: "artifacts/preprocessing/X_test.csv"
+
+preprocessing:
+  root_dir: artifacts/preprocessing
+  output_train_path: "artifacts/preprocessing/y_train.csv"
+  output_test_path: "artifacts/preprocessing/y_test.csv"
+
+train_model:
+  root_dir: "artifacts/models"
+  model_path: "artifacts/models/model.pkl"
+
+evaluation:
+  root_dir: "artifacts/models"
+  score_path: metrics/scores.json
+  mlflow_dataset_path: "artifacts/data/ml_eval_result.csv"
+  mlflow_exp_name: "ML Project"
+  mlflow_run_name: "ml-eval"

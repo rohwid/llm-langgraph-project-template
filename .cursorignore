@@ -1,0 +1,9 @@
+# Ignore all `.log` files
+*.log
+
+# Ignore specific file `config.json`
+config.json
+
+# Enviroment variables
+.env
+.env.example
