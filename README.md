@@ -1,31 +1,14 @@
-# **LLM with LangGraph Project Template**
+# LLM with LangGraph Project Template
 
 ![workflow status](https://github.com/rohwid/llm-langgraph-project-template/actions/workflows/builder.yml/badge.svg)
 
-Steps:
-+ Select **Use this template** > **Create a new repository**. This menu is in the top right corner of this repository.
-+ Create and define your the project repository.
-+ Edit the [README.md](README.md) file's **workflow status** badge with the name of your repository.
-+ Create virtual environment
+## Getting Started
 
-    ```bash
-    virtualenv .venv -p /usr/bin/python3.10
-    ```
-  **Note:** You can use any Python version, as long the Python packages in `requirements.txt` are supported. Because of the Python packages in `requirements.txt` were declared without describe the version.
-+ Activate the virtual environment
+Follow these steps to set up your own project using this template:
 
-    ```bash
-    source .venv/bin/activate
-    ```
+1. **Create a New Repository**
+   - Click **Use this template** at the top right of this repository.
+   - Select **Create a new repository** and define your project details.
 
-+ Install package.
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-+ enable the environment variables.
-
-    ```bash
-    cp .env.example .env
-    ```
+2. **Update Workflow Badge**
+   - Edit the `README.md` file and update the **workflow status** badge to use your new repository's name.
