@@ -1,35 +1,39 @@
-[tool.poetry]
-name = "cis-ai-prompter"
-version = "0.0.3"
-description = "AI Assistant for answering questions about CEdX (Ciputra Education Digital Experience) menus"
-authors = ["Rohman Widiyanto <widiyanto.rohman@gmail.com>"]
-readme = "README.md"
-packages = [{ include = "src" }]
-
-[tool.poetry.dependencies]
-python = "^3.12"
-langchain-core = "^0.3.40"
-langchain-community = "^0.3.7"
-langchain-openai = "^0.3.7"
-langgraph = "^0.3.2"
-langgraph-cli = "^0.1.74"
-ensure = "^1.0.4"
-ipykernel = "^6.29.5"
-ipywidgets = "^8.1.5"
-joblib = "^1.4.2"
-python-box = "^7.2.0"
-pyyaml = "^6.0.2"
-langgraph-sdk = "^0.1.55"
-fastapi = "^0.115.11"
-python-multipart = "^0.0.20"
-uvicorn = "^0.34.0"
-loguru = "^0.7.3"
-trustcall = "^0.0.37"
-langchain-huggingface = "^0.1.0"
-langchain-elasticsearch = "^0.3.0"
-python-strtobool = "^1.0.3"
-huggingface-hub = {version = "^0.30.2", extras = ["hf_xet"]}
+[tool.pdm.build]
+includes = ["src"]
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+requires-python = "<4.0,>=3.12"
+dependencies = [
+    "langchain-core<1.0.0,>=0.3.40",
+    "langchain-community<1.0.0,>=0.3.7",
+    "langchain-openai<1.0.0,>=0.3.7",
+    "langgraph<1.0.0,>=0.3.2",
+    "langgraph-cli<1.0.0,>=0.1.74",
+    "ensure<2.0.0,>=1.0.4",
+    "ipykernel<7.0.0,>=6.29.5",
+    "ipywidgets<9.0.0,>=8.1.5",
+    "joblib<2.0.0,>=1.4.2",
+    "python-box<8.0.0,>=7.2.0",
+    "pyyaml<7.0.0,>=6.0.2",
+    "langgraph-sdk<1.0.0,>=0.1.55",
+    "fastapi<1.0.0,>=0.115.11",
+    "python-multipart<1.0.0,>=0.0.20",
+    "uvicorn<1.0.0,>=0.34.0",
+    "loguru<1.0.0,>=0.7.3",
+    "trustcall<1.0.0,>=0.0.37",
+    "langchain-huggingface<1.0.0,>=0.1.0",
+    "langchain-elasticsearch<1.0.0,>=0.3.0",
+    "python-strtobool<2.0.0,>=1.0.3",
+    "huggingface-hub[hf_xet]<1.0.0,>=0.30.2",
+]
+name = "cis-ai-chatbot"
+version = "0.0.3"
+description = "AI Assistant for answering questions about CEdX (Ciputra Education Digital Experience) menus"
+readme = "README.md"
+authors = [
+    { name = "Rohman Widiyanto", email = "rohwid@gmail.com" }
+]
