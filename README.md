@@ -12,3 +12,4 @@ Follow these steps to set up your own project using this template:
 
 2. **Update Workflow Badge**
    - Edit the `README.md` file and update the **workflow status** badge to use your new repository's name.
+   - Edit `.github/workflows/builder.yml` to edit the CI/CD pipeline with GitHub Action or the name of the workflows first.

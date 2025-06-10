@@ -1,4 +1,4 @@
-name: Machine Learning Project Builder
+name: LLM Apps Project Builder
 on:
   pull_request:
     branches: [main]
