@@ -7,14 +7,16 @@ from typing import Literal
 
 def route_message(state: QnAChatbotState, 
                   config: RunnableConfig, 
-                  store: BaseStore) -> Literal[END, "update_instructions"]:
+                  store: BaseStore) -> Literal[END, "update_instructions", "update_profile"]:
     """Reflect on the memories and chat history to decide whether to update the memory collection."""
     message = state["messages"][-1]
     if len(message.tool_calls) == 0:
         return END
     else:
         tool_call = message.tool_calls[0]
-        if tool_call["args"]["update_type"] == "INSTRUCTION":
+        if tool_call["args"]["update_type"] == "PROFILE":
+            return "update_profile"
+        elif tool_call["args"]["update_type"] == "INSTRUCTION":
             return "update_instructions"
         else:
             raise ValueError

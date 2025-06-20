@@ -7,7 +7,7 @@ from typing import Literal, TypedDict
 
 class UpdateMemory(TypedDict):
     """Specifies the type of memory to update, currently only supporting 'INSTRUCTION'."""
-    update_type: Literal["INSTRUCTION"]
+    update_type: Literal["INSTRUCTION", "PROFILE"]
 
 class MemoryUpdater:
     """
