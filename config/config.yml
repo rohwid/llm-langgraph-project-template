@@ -8,4 +8,4 @@ chatbot:
   trim_messages: 4
 
 api:
-  graph_name: metta_chatbot
+  graph_name: qna_chatbot
