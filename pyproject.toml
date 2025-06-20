@@ -30,9 +30,9 @@ dependencies = [
     "python-strtobool<2.0.0,>=1.0.3",
     "huggingface-hub[hf_xet]<1.0.0,>=0.30.2",
 ]
-name = "cis-ai-chatbot"
+name = "qna-chatbot"
 version = "0.0.3"
-description = "AI Assistant for answering questions about CEdX (Ciputra Education Digital Experience) menus"
+description = "AI Assistant for answering questions based on RAG (Retrieval Augmented Generation)"
 readme = "README.md"
 authors = [
     { name = "Rohman Widiyanto", email = "rohwid@gmail.com" }

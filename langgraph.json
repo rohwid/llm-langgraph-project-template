@@ -1,0 +1,8 @@
+{
+  "graphs": {
+    "qna_chatbot": "./src/graph.py:app"
+  },
+  "python_version": "3.12",
+  "dependencies": ["."],
+  "env": ".env"
+}
