@@ -1,0 +1,191 @@
+x-chatbot-common:
+  &chatbot-common
+  restart: unless-stopped
+  environment:
+    &chatbot-common-env
+    ENV: ${ENV}
+  networks:
+    - qna-chatbot-net
+
+x-langgraph-server-common:
+  &langgraph-server-common
+  image: "cis/chatbot-langgraph-server:${TAG:-latest}"
+  environment:
+    <<: *chatbot-common-env
+    REDIS_URI: ${REDIS_URI}
+    POSTGRES_URI: ${POSTGRES_URI}
+    LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY}
+    LANGCHAIN_TRACING: ${LANGCHAIN_TRACING}
+    LANGCHAIN_PROJECT: ${LANGCHAIN_PROJECT}
+    OPENAI_API_KEY: ${OPENAI_API_KEY}
+    TOKENIZERS_PARALLELISM: false
+    ES_HOST: ${ES_HOST}
+    ES_PORT: ${ES_PORT}
+    ES_INDEX: ${ES_INDEX}
+    IS_MACOS: ${IS_MACOS}
+
+x-langgraph-api-common:
+  &langgraph-api-common
+  build: ./
+  image: cis/chatbot-api:${TAG:-latest}
+  environment:
+    <<: *chatbot-common-env
+    API_WORKER_NUMBERS: ${API_WORKER_NUMBERS}
+    LANGGRAPH_SERVER_URL: ${LANGGRAPH_SERVER_URL}
+
+x-api-hc:
+  &api-hc
+  healthcheck:
+    test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
+    interval: 30s
+    timeout: 10s
+    retries: 5
+    start_period: 30s
+
+x-receive-test-common:
+  &receive-test-common
+  build: ./tests/receive-answer
+  image: cis/chatbot-receive-test:${TAG:-latest}
+
+volumes:
+  qna-chatbot-data:
+    driver: local
+
+services:
+  qna-chatbot-redis:
+    image: redis:7.2-bookworm
+    container_name: qna-chatbot-redis
+    hostname: qna-chatbot-redis
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 1s
+      retries: 5
+    restart: unless-stopped
+    profiles:
+      - dependencies
+      - development
+    networks:
+      - qna-chatbot-net
+    
+  qna-chatbot-postgres:
+    image: postgres:16
+    container_name: qna-chatbot-postgres
+    hostname: qna-chatbot-postgres
+    ports:
+      - 5442:5432
+    environment:
+      POSTGRES_DB: ${LANGCHAIN_PG_DB_NAME}
+      POSTGRES_USER: ${LANGCHAIN_PG_USER}
+      POSTGRES_PASSWORD: ${LANGCHAIN_PG_PASSWORD}
+    volumes:
+      - qna-chatbot-db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      start_period: 10s
+      timeout: 1s
+      retries: 5
+      interval: 5s
+    restart: unless-stopped
+    profiles:
+      - dependencies
+      - development
+    networks:
+      - qna-chatbot-net
+
+  qna-chatbot-langgraph-server-dev:
+    <<: [*langgraph-server-common, *chatbot-common]
+    container_name: qna-chatbot-langgraph-server-dev
+    hostname: qna-chatbot-langgraph-server-dev
+    ports:
+      - 8128:8000
+    profiles:
+      - development
+  
+  qna-chatbot-langgraph-server-stg:
+    <<: [*langgraph-server-common, *chatbot-common]
+    container_name: qna-chatbot-langgraph-server-stg
+    hostname: qna-chatbot-langgraph-server-stg
+    ports:
+      - 8127:8000
+    profiles:
+      - staging
+
+  qna-chatbot-langgraph-server-prd:
+    <<: [*langgraph-server-common, *chatbot-common]
+    container_name: qna-chatbot-langgraph-server-prd
+    hostname: qna-chatbot-langgraph-server-prd
+    ports:
+      - 8126:8000
+    profiles:
+      - production
+  
+  qna-chatbot-api-dev:
+    <<: [*langgraph-api-common, *chatbot-common, *api-hc]
+    container_name: qna-chatbot-api-dev
+    hostname: qna-chatbot-api-dev
+    ports:
+      - 8239:8000
+    profiles:
+      - development
+    depends_on:
+      - qna-chatbot-langgraph-server-dev
+  
+  qna-chatbot-api-stg:
+    <<: [*langgraph-api-common, *chatbot-common, *api-hc]
+    container_name: qna-chatbot-api-stg
+    hostname: qna-chatbot-api-stg
+    ports:
+      - 8238:8000
+    profiles:
+      - staging
+    depends_on:
+      - qna-chatbot-langgraph-server-stg
+  
+  qna-chatbot-api-prd:
+    <<: [*langgraph-api-common, *chatbot-common, *api-hc]
+    container_name: qna-chatbot-api-prd
+    hostname: qna-chatbot-api-prd
+    ports:
+      - 8237:8000
+    profiles:
+      - production
+    depends_on:
+      - qna-chatbot-langgraph-server-prd
+  
+  chatbot-receive-test-dev:
+    <<: [*receive-test-common, *chatbot-common, *api-hc]
+    container_name: chatbot-receive-test-dev
+    hostname: chatbot-receive-test-dev
+    ports:
+      - 8105:8000
+    profiles:
+      - development
+    depends_on:
+      - qna-chatbot-api-dev
+
+  chatbot-receive-test-stg:
+    <<: [*receive-test-common, *chatbot-common, *api-hc]
+    container_name: chatbot-receive-test-stg
+    hostname: chatbot-receive-test-stg
+    ports:
+      - 8104:8000
+    profiles:
+      - staging
+    depends_on:
+      - qna-chatbot-api-stg
+
+  chatbot-receive-test-prd:
+    <<: [*receive-test-common, *chatbot-common, *api-hc]
+    container_name: chatbot-receive-test-prd
+    hostname: chatbot-receive-test-prd
+    ports:
+      - 8103:8000
+    profiles:
+      - production
+    depends_on:
+      - qna-chatbot-api-prd
+
+networks:
+  qna-chatbot-net:
+    driver: bridge
