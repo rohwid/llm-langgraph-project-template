@@ -27,7 +27,7 @@ def update_instructions(state: QnAChatbotState, config: RunnableConfig, store: B
         dict: A dictionary containing a message indicating the instruction update was successful.
     """
     config_manager = ConfigurationManager()
-    prompter_config = config_manager.get_chatbot_config()
+    chatbot_config = config_manager.get_chatbot_config()
     
     # Get the user ID from the config
     configurable = Configuration.from_runnable_config(config)
@@ -42,7 +42,7 @@ def update_instructions(state: QnAChatbotState, config: RunnableConfig, store: B
     
     logger.info(f"Initiating instruction update for user ID \"{user_id}\"..")
     
-    instruction_updater = InstructionUpdater(config=prompter_config)
+    instruction_updater = InstructionUpdater(config=chatbot_config)
     new_memory = instruction_updater.update_instruction(system_msg, state["messages"])
 
     # Overwrite the existing memory in the store 

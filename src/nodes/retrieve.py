@@ -18,17 +18,17 @@ def retrieve(state: QnAChatbotState) -> List[Dict[str, str]]:
         List[Dict[str, str]]: A dictionary containing the retrieved documents.
     """
     config_manager = ConfigurationManager()
-    prompter_config = config_manager.get_chatbot_config()
+    chatbot_config = config_manager.get_chatbot_config()
     retriever = RetrieverTool()
     
     retrieved_docs = retriever.invoke({
         "query": state["messages"][-1].content, # state["messages"] keep store all user messages
-        "is_macos": prompter_config.is_macos,
-        "es_url": prompter_config.es_url,
-        "es_index": prompter_config.es_index,
-        "content_field": prompter_config.content_field,
-        "knn_field": prompter_config.knn_field,
-        "k": prompter_config.k
+        "is_macos": chatbot_config.is_macos,
+        "es_url": chatbot_config.es_url,
+        "es_index": chatbot_config.es_index,
+        "content_field": chatbot_config.content_field,
+        "knn_field": chatbot_config.knn_field,
+        "k": chatbot_config.k
     })
     
     return {
